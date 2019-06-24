@@ -18,6 +18,13 @@ app.use(cors());
 
 const SAMPLE_ADDRESS = '435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4';
 
+app.post('/rpc', (req, res) => {
+  const { method, params, id } = req.body;
+  client.request(method, params, (error, result) => {
+    res.send({ jsonrpc: '2.0', id, method, result, error });
+  });
+});
+
 app.get('/api/account/state/:address?', (req, res) => {
   const { scope } = req.query;
   const address = req.params.address || SAMPLE_ADDRESS;
