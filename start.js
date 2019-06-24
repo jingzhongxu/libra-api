@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { utils } = require('libra-grpc');
+const { has, at } = require('lodash');
 const client = require('./helpers/client');
 
 const app = express();
@@ -57,6 +58,7 @@ app.get('/api/events/:address?/:startEventSeqNum?/:ascending?/:limit?', (req, re
 });
 
 app.get('/api/transactions/:startVersion?/:limit?/:fetchEvents?', (req, res) => {
+  const { scope } = req.query;
   const startVersion = req.params.startVersion || 0;
   const limit = req.params.limit || 10;
   const fetchEvents = req.params.fetchEvents !== 'false';
@@ -73,17 +75,23 @@ app.get('/api/transactions/:startVersion?/:limit?/:fetchEvents?', (req, res) => 
       transactions.push(decodedTx);
     });
     result.txn_list_with_proof.transactions = transactions;
+    if (scope && has(result, scope))
+      return res.json(at(result, scope));
     res.json({ result });
   });
 });
 
 app.get('/*', (req, res) => {
-  res.json([
-    './api/account/state/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4',
-    './api/account/transaction/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true',
-    './api/events/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true/10',
-    './api/transactions/0/10/true',
-  ]);
+  res.json({
+    error: "This page isn't available",
+    examples: [
+      'https://librascript.io/api/account/state/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4',
+      'https://librascript.io/api/account/transaction/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true',
+      'https://librascript.io/api/events/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true/10',
+      'https://librascript.io/api/transactions/0/10/true',
+      'https://librascript.io/api/transactions/0/10/true?scope=txn_list_with_proof.transactions[0].raw_txn',
+    ],
+  });
 });
 
 app.listen(port, () => {
