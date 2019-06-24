@@ -12,7 +12,8 @@ Get the latest state for an account.
 ```
 /api/account/state/:address?
 ```
-Example: https://librascript.io/api/account/state/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4
+**Example**
+https://librascript.io/api/account/state/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4
 
 #### Get account transaction
 Get the committed transaction by account and sequence number.
@@ -20,7 +21,8 @@ Get the committed transaction by account and sequence number.
 ```
 /api/account/transaction/:address?/:sequenceNumber?/:fetchEvents?
 ```
-Example: https://librascript.io/api/account/transaction/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true
+**Example**
+https://librascript.io/api/account/transaction/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true
 
 #### Get events
 Get event by account and path.
@@ -28,7 +30,8 @@ Get event by account and path.
 ```
 /api/events/:address?/:startEventSeqNum?/:ascending?/:limit?
 ```
-Example: https://librascript.io/api/events/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true/10
+**Example**
+https://librascript.io/api/events/435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4/0/true/10
 
 #### Get transactions
 Get the committed transaction by range
@@ -36,7 +39,8 @@ Get the committed transaction by range
 ```
 /api/transactions/:startVersion?/:limit?/:fetchEvents?
 ```
-Demo: https://librascript.io/api/transactions/0/10/true
+**Example**
+https://librascript.io/api/transactions/0/10/true
 
 ### Getting help
 
