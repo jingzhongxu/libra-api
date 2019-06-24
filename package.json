@@ -10,7 +10,8 @@
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "libra-grpc": "0.0.3"
+    "libra-grpc": "0.0.3",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
