@@ -16,17 +16,22 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(cors());
 
+const SAMPLE_ADDRESS = '435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4';
+
 app.get('/api/account/state/:address?', (req, res) => {
-  const address = req.params.address || '435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4';
+  const { scope } = req.query;
+  const address = req.params.address || SAMPLE_ADDRESS;
   const params = { address: Buffer.from(address, 'hex') };
   client.request('get_account_state', params, (error, result) => {
     if (error) return res.json({ error });
+    if (scope && has(result, scope)) return res.json(at(result, scope));
     res.json({ result });
   });
 });
 
 app.get('/api/account/transaction/:address?/:sequenceNumber?/:fetchEvents?', (req, res) => {
-  const address = req.params.address || '435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4';
+  const { scope } = req.query;
+  const address = req.params.address || SAMPLE_ADDRESS;
   const sequenceNumber = req.params.sequenceNumber || 0;
   const fetchEvents = req.params.fetchEvents !== 'false';
   const params = {
@@ -36,12 +41,14 @@ app.get('/api/account/transaction/:address?/:sequenceNumber?/:fetchEvents?', (re
   };
   client.request('get_account_transaction_by_sequence_number', params, (error, result) => {
     if (error) return res.json({ error });
+    if (scope && has(result, scope)) return res.json(at(result, scope));
     res.json({ result });
   });
 });
 
 app.get('/api/events/:address?/:startEventSeqNum?/:ascending?/:limit?', (req, res) => {
-  const address = req.params.address || '435fc8fc85510cf38a5b0cd6595cbb8fbb10aa7bb3fe9ad9820913ba867f79d4';
+  const { scope } = req.query;
+  const address = req.params.address || SAMPLE_ADDRESS;
   const startEventSeqNum = req.params.startEventSeqNum || 0;
   const ascending = req.params.ascending !== 'false';
   const limit = req.params.limit || 10;
@@ -53,6 +60,7 @@ app.get('/api/events/:address?/:startEventSeqNum?/:ascending?/:limit?', (req, re
   };
   client.request('get_events_by_event_access_path', params, (error, result) => {
     if (error) return res.json({ error });
+    if (scope && has(result, scope)) return res.json(at(result, scope));
     res.json({ result });
   });
 });
@@ -75,8 +83,7 @@ app.get('/api/transactions/:startVersion?/:limit?/:fetchEvents?', (req, res) => 
       transactions.push(decodedTx);
     });
     result.txn_list_with_proof.transactions = transactions;
-    if (scope && has(result, scope))
-      return res.json(at(result, scope));
+    if (scope && has(result, scope)) return res.json(at(result, scope));
     res.json({ result });
   });
 });
